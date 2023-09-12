@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        /* Set the size of the div element that contains the map */
+        #map {
+            height: 600px;
+            width: 800px;
+        }
+    </style>
+</head>
+
+<body>
+    <!--The div elements for the map and message -->
+    <div id="map"></div>
+    <div id="msg"></div>
+    <script>
+
+        function haversine_distance(mk1, mk2) {
+            var R = 3958.8; // Radius of the Earth in miles
+            // To use Km, set R = 6371.0710
+            var rlat1 = mk1.position.lat() * (Math.PI / 180); // Convert degrees to radians
+            var rlat2 = mk2.position.lat() * (Math.PI / 180); // Convert degrees to radians
+            var diff_lat = rlat2 - rlat1; // Radian difference (latitudes)
+            var diff_lon = (mk2.position.lng() - mk1.position.lng()) * (Math.PI / 180); // Radian difference (longitudes)
+
+            var dist = 2 * R * Math.asin(Math.sqrt(Math.sin(diff_lat / 2) * Math.sin(diff_lat / 2) + Math.cos(rlat1) * Math.cos(rlat2) * Math.sin(diff_lon / 2) * Math.sin(diff_lon / 2)));
+            return dist;
+        }
+        // Initialize and add the map
+        var map;
+        function initMap() {
+            // The map, centered on Bhadrak District Collectorate
+            const center = { lat: 21.073160319916628, lng: 86.49030296819619 };
+            const options = { zoom: 15, scaleControl: true, center: center };
+            map = new google.maps.Map(
+                document.getElementById('map'), options);
+
+            // Locations of landmarks
+            const SSSS_HIGH_SCHOOL = { lat: 21.057027, lng: 86.51336 };
+            const NC_HIGH_SCHOOL = { lat: 21.052642, lng: 86.517561 };
+            const BM_Bagurai_High_School = { lat: 21.061182, lng: 86.481106 };
+            const Bapujee_High_School = { lat: 21.057288, lng: 86.495979 };
+            const Chunati_High_School = { lat: 21.080491, lng: 86.524491 };
+            const DN_Girls_High_School = { lat: 21.051249, lng: 86.518184 };
+            const Charampa_Girls_High_School = { lat: 21.08943618, lng: 86.52259016 };
+            const Khandatada_High_School = { lat: 21.02298601, lng: 86.52570856 };
+            const Rambhila_High_School = { lat: 21.139965, lng: 86.532786 };
+            const Das_High_School = { lat: 21.084763, lng: 86.428764 };
+            const Kshetrabasi_High_School = { lat: 20.992489, lng: 86.484208 };
+            const B_J_HIGH_SCHOOL_BANITIA = { lat: 21.14679553, lng: 86.45715524 };
+            const Bahudarada_Nodal_High_School = { lat: 21.00725, lng: 86.430151 };
+            const Andhaipally_High_School = { lat: 21.027993, lng: 86.411619 };
+            const Sabarang_High_School = { lat: 21.060236, lng: 86.627612 };
+            const ROBERT_HIGH_SCHOOL = { lat: 21.10223781, lng: 86.6913764 };
+            const Chandigaon_High_School = { lat: 21.094119, lng: 86.578069 };
+            const Naripur_School = { lat: 21.063424, lng: 86.498979 };
+            const RN_High_School = { lat: 21.192313, lng: 86.601827 };
+            const Dhamnagar_High_School = { lat: 20.912252, lng: 86.43889 };
+            const Zilla_School = { lat: 21.059385, lng: 86.499456 };
+            const Government_High_school = { lat: 21.063323, lng: 86.495477 };
+            const Sri_gopal_jew_high_school = { lat: 21.067625, lng: 86.495715 };
+            const MOTHER_S_RESIDENTIAL_HIGH_SCHOOL = { lat: 21.067935, lng: 86.494621 };
+            const Mahi_Queen = { lat: 21.057365, lng: 86.496429 };
+            const Haji_mahmood_urdu_girls_high_school = { lat: 21.053786, lng: 86.513302 };
+            const SBM_High_School = { lat: 21.039223, lng: 86.517118 };
+            const Royal_residental_high_school = { lat: 21.047411, lng: 86.484676 };
+            const St_Xaviers_High_School = { lat: 21.092541, lng: 86.52332 };
+            const Satabhauni_High_School = { lat: 21.019309, lng: 86.50427 };
+            const Geltua_GP_High_School = { lat: 21.084059, lng: 86.478528 };
+            const Randia_School_High = { lat: 21.069795, lng: 86.46616 };
+            const Surendra_jena_High_School = { lat: 21.039534, lng: 86.5142 };
+            const Betra_Highschool = { lat: 21.039333, lng: 86.438388 };
+            const Bania_High_School = { lat: 21.071832, lng: 86.567127 };
+            const KMMS_NODAL_HIGH_SCHOOL = { lat: 21.033493, lng: 86.447064 };
+            const Bhadrakali_High_school = { lat: 21.014976, lng: 86.538663 };
+            const Kartikeswar_high_school = { lat: 21.024875, lng: 86.560881 };
+            const Ranitalaw_Government_High_School = { lat: 21.129236, lng: 86.553412 };
+            const Ram_Narayanan_High_school = { lat: 21.022442, lng: 86.581691 };
+            const Kenduapada_High_School = { lat: 21.028681, lng: 86.384936 };
+            const Barikpur_High_School = { lat: 20.990296, lng: 86.418419 };
+            const Puruna_Bazar_Hospital = { lat: 21.05145469, lng: 86.51819255 };
+            const ZASS_MIDTOWN_HOSPITAL = { lat: 21.06088495, lng: 86.52513334 };
+            const Unani_Hospital = { lat: 21.06702215, lng: 86.51669338 };
+            const Panigrahi_Health_Care = { lat: 21.07916767, lng: 86.50976937 };
+            const Salandi_Hospital = { lat: 21.07288168, lng: 86.49650021 };
+            const Sri_Ram_Nursing_Home = { lat: 21.05254165, lng: 86.48949302 };
+            const Sriram_Hospital = { lat: 21.05378773, lng: 86.48991786 };
+            const Sai_Hospital = { lat: 21.05342504, lng: 86.49319271 };
+            const Dr_Bibhuti_Nayak = { lat: 21.05421091, lng: 86.49252925 };
+            const Aarogyam_Digital_Poly_Clinic = { lat: 21.05425854, lng: 86.49309064 };
+            const Rajiv_Medicare = { lat: 21.05483008, lng: 86.49395824 };
+            const Barsa = { lat: 21.05891452, lng: 86.49596799 };
+            const SUBHAM_HEALTHCARE_AND_REASEARCH_CENTRE = { lat: 21.06762568, lng: 86.49348094 };
+            const Sai_Bharadwaj_Hospital = { lat: 21.06926808, lng: 86.49712243 };
+            const Pradip_Ku_Ghosh_Home_Bharadwaj_Hospital = { lat: 21.06847863, lng: 86.49743935 };
+            const Padhi_Health_Care = { lat: 21.06830982, lng: 86.50122528 };
+            const District_Headquarters_Hospital_Bhadrak = { lat: 21.06599165, lng: 86.50244051 };
+
+            // The markers for the places.
+            var mk1 = new google.maps.Marker({ position: SSSS_HIGH_SCHOOL, map: map });
+            var mk2 = new google.maps.Marker({ position: NC_HIGH_SCHOOL, map: map });
+            var mk3 = new google.maps.Marker({ position: BM_Bagurai_High_School, map: map });
+            var mk4 = new google.maps.Marker({ position: Bapujee_High_School, map: map });
+            var mk5 = new google.maps.Marker({ position: Chunati_High_School, map: map });
+            var mk6 = new google.maps.Marker({ position: DN_Girls_High_School, map: map });
+            var mk5 = new google.maps.Marker({ position: Charampa_Girls_High_School, map: map });
+            var mk7 = new google.maps.Marker({ position: Khandatada_High_School, map: map });
+            var mk8 = new google.maps.Marker({ position: Rambhila_High_School, map: map });
+            var mk9 = new google.maps.Marker({ position: Das_High_School, map: map });
+            var mk10 = new google.maps.Marker({ position: Kshetrabasi_High_School, map: map });
+            var mk11 = new google.maps.Marker({ position: B_J_HIGH_SCHOOL_BANITIA, map: map });
+            var mk12 = new google.maps.Marker({ position: Bahudarada_Nodal_High_School, map: map });
+            var mk13 = new google.maps.Marker({ position: Andhaipally_High_School, map: map });
+            var mk14 = new google.maps.Marker({ position: Sabarang_High_School, map: map });
+            var mk14 = new google.maps.Marker({ position: ROBERT_HIGH_SCHOOL, map: map });
+            var mk15 = new google.maps.Marker({ position: Chandigaon_High_School, map: map });
+            var mk16 = new google.maps.Marker({ position: Naripur_School, map: map });
+            var mk17 = new google.maps.Marker({ position: RN_High_School, map: map });
+            var mk18 = new google.maps.Marker({ position: Dhamnagar_High_School, map: map });
+            var mk19 = new google.maps.Marker({ position: Zilla_School, map: map });
+            var mk20 = new google.maps.Marker({ position: Government_High_school, map: map });
+            var mk21 = new google.maps.Marker({ position: Sri_gopal_jew_high_school, map: map });
+            var mk22 = new google.maps.Marker({ position: MOTHER_S_RESIDENTIAL_HIGH_SCHOOL, map: map });
+            var mk23 = new google.maps.Marker({ position: Mahi_Queen, map: map });
+            var mk24 = new google.maps.Marker({ position: Haji_mahmood_urdu_girls_high_school, map: map });
+            var mk25 = new google.maps.Marker({ position: SBM_High_School, map: map });
+            var mk26 = new google.maps.Marker({ position: Royal_residental_high_school, map: map });
+            var mk27 = new google.maps.Marker({ position: St_Xaviers_High_School, map: map });
+            var mk28 = new google.maps.Marker({ position: Satabhauni_High_School, map: map });
+            var mk29 = new google.maps.Marker({ position: Geltua_GP_High_School, map: map });
+            var mk30 = new google.maps.Marker({ position: Randia_School_High, map: map });
+            var mk31 = new google.maps.Marker({ position: Surendra_jena_High_School, map: map });
+            var mk32 = new google.maps.Marker({ position: Betra_Highschool, map: map });
+            var mk33 = new google.maps.Marker({ position: Bania_High_School, map: map });
+            var mk34 = new google.maps.Marker({ position: KMMS_NODAL_HIGH_SCHOOL, map: map });
+            var mk35 = new google.maps.Marker({ position: Bhadrakali_High_school, map: map });
+            var mk36 = new google.maps.Marker({ position: Kartikeswar_high_school, map: map });
+            var mk37 = new google.maps.Marker({ position: Ranitalaw_Government_High_School, map: map });
+            var mk40 = new google.maps.Marker({ position: Ram_Narayanan_High_school, map: map });
+            var mk41 = new google.maps.Marker({ position: Kenduapada_High_School, map: map });
+            var mk42 = new google.maps.Marker({ position: Barikpur_High_School, map: map });
+            var mk43 = new google.maps.Marker({ position: Puruna_Bazar_Hospital, map: map });
+            var mk44 = new google.maps.Marker({ position: ZASS_MIDTOWN_HOSPITAL, map: map });
+            var mk45 = new google.maps.Marker({ position: Unani_Hospital, map: map });
+            var mk46 = new google.maps.Marker({ position: Panigrahi_Health_Care, map: map });
+            var mk47 = new google.maps.Marker({ position: Salandi_Hospital, map: map });
+            var mk48 = new google.maps.Marker({ position: Sri_Ram_Nursing_Home, map: map });
+            var mk49 = new google.maps.Marker({ position: Sriram_Hospital, map: map });
+            var mk50 = new google.maps.Marker({ position: Sai_Hospital, map: map });
+            var mk51 = new google.maps.Marker({ position: Dr_Bibhuti_Nayak, map: map });
+            var mk52 = new google.maps.Marker({ position: Aarogyam_Digital_Poly_Clinic, map: map });
+            var mk53 = new google.maps.Marker({ position: Rajiv_Medicare, map: map });
+            var mk55 = new google.maps.Marker({ position: Barsa, map: map });
+            var mk56 = new google.maps.Marker({ position: SUBHAM_HEALTHCARE_AND_REASEARCH_CENTRE, map: map });
+            var mk57 = new google.maps.Marker({ position: Sai_Bharadwaj_Hospital, map: map });
+            var mk58 = new google.maps.Marker({ position: Pradip_Ku_Ghosh_Home_Bharadwaj_Hospital, map: map });
+            var mk59 = new google.maps.Marker({ position: Padhi_Health_Care, map: map });
+            var mk60 = new google.maps.Marker({ position: District_Headquarters_Hospital_Bhadrak, map: map });
+
+            // Draw a line showing the straight distance between the markers
+            // function dist_line(mk1, mk2) {
+            var line = new google.maps.Polyline({ path: [mk1, mk2], map: map });
+            //}
+
+            // Calculate and display the straight Line distance between markers
+            var distance = haversine_distance(mk1, mk2);
+            document.getElementById('msg').innerHTML = "Straight Line Distance between markers: " + distance.toFixed(2) + " mi.";
+        }
+    </script>
+    <!--Load the API from the specified URL -- remember to replace YOUR_API_KEY-->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap">
+    </script>
+</body>
+
+</html>
